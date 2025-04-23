@@ -48,10 +48,10 @@ task.delay(0.4, function()
    local MM2Tab = Window:CreateTab("MM2 Scripts", 4483362458)
 
    MM2Tab:CreateButton({
-      Name = "Yarhm Hub",
+      Name = "Yarhm Hub (Working)",
       Callback = function()
          pcall(function()
-            loadstring(game:HttpGet("https://rawscripts.net/raw/Murder-Mystery-2-Yarhm-MM2-Script-10591"))()
+            loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-YARHM-12403"))()
          end)
       end,
    })
@@ -61,29 +61,39 @@ end)
 task.delay(0.6, function()
    local BFTab = Window:CreateTab("Blox Fruits", 4483362458)
 
+   -- W Azure Hub
    BFTab:CreateButton({
-      Name = "W Azure Hub",
+      Name = "W Azure Hub (Auto Farm, Teleport, No Key)",
       Callback = function()
          pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/AzureHubX/AzureHub/main/Main.lua"))()
+            getgenv().Team = "Pirates"
+            getgenv().FixCrash = false
+            getgenv().FixCrash2 = false
+            loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/3b2169cf53bc6104dabe8e19562e5cc2.lua"))()
          end)
       end,
    })
 
+   -- Redz Hub
    BFTab:CreateButton({
-      Name = "Redz Hub",
+      Name = "Redz Hub V2 (Auto Farm, Fruit ESP, No Key)",
       Callback = function()
          pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/HUB/main/BloxFruit.lua"))()
+            local Settings = {
+               JoinTeam = "Pirates",
+               Translator = true
+            }
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/newredz/BloxFruits/refs/heads/main/Source.luau"))(Settings)
          end)
       end,
    })
 
+   -- Astral Hub
    BFTab:CreateButton({
-      Name = "Astral Hub",
+      Name = "Astral Hub (Auto Farm, Boss, ESP)",
       Callback = function()
          pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/ASTRALHUB/ASTRAL/main/BloxFruit.lua"))()
+            loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Astral-v1-Auto-Dragon-Auto-Dojo-and-More-28167"))()
          end)
       end,
    })
@@ -140,6 +150,45 @@ task.delay(1.0, function()
          pcall(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/pid4k/scripts/main/BeanzHub.lua"))()
          end)
+      end,
+   })
+end)
+
+-- Dead Rails Tab
+task.delay(1.2, function()
+   local DeadRailsTab = Window:CreateTab("Dead Rails Scripts", 4483362458)
+
+   -- Tora IsMe Script (Working)
+   DeadRailsTab:CreateButton({
+      Name = "Tora IsMe Script (Working)",
+      Callback = function()
+         pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/tora-xyz/IsMe/main/IsMe.lua"))()
+         end)
+      end,
+   })
+
+   -- Null Fire (Dead Rails Alpha) Script
+   DeadRailsTab:CreateButton({
+      Name = "Null Fire (Dead Rails Alpha)",
+      Callback = function()
+         pcall(function()
+            loadstring(game:HttpGet("https://rawscripts.net/raw/Dead-Rails-Alpha-NullFire-32921"))()
+         end)
+      end,
+   })
+end)
+
+-- Jeff Hub (More Scripts Soon Placeholder)
+task.delay(1.4, function()
+   local JeffHubTab = Window:CreateTab("Jeff Hub", 4483362458)
+
+   -- Placeholder Button
+   JeffHubTab:CreateButton({
+      Name = "More Scripts Coming Soon!",
+      Callback = function()
+         -- Placeholder for additional scripts
+         print("More scripts coming soon!")
       end,
    })
 end)

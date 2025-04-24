@@ -179,16 +179,24 @@ task.delay(1.2, function()
    })
 end)
 
--- Jeff Hub (More Scripts Soon Placeholder)
-task.delay(1.4, function()
-   local JeffHubTab = Window:CreateTab("Jeff Hub", 4483362458)
+-- Da Hood Tab
+task.delay(1.6, function()
+   local DaHoodTab = Window:CreateTab("Da Hood", 4483362458)
 
-   -- Placeholder Button
-   JeffHubTab:CreateButton({
-      Name = "More Scripts Coming Soon!",
+   DaHoodTab:CreateButton({
+      Name = "Bypass Anti-Cheat (Must Run First)",
       Callback = function()
-         -- Placeholder for additional scripts
-         print("More scripts coming soon!")
+         pcall(function()
+            loadstring(game:HttpGet("https://rawscripts.net/raw/Da-Hood-Anti-Cheat-Bypass-12517"))()
+         end)
+      end,
+   })
+
+   -- Placeholder for more Da Hood scripts
+   DaHoodTab:CreateButton({
+      Name = "More Da Hood Scripts Coming Soon!",
+      Callback = function()
+         print("More Da Hood scripts coming soon!")
       end,
    })
 end)

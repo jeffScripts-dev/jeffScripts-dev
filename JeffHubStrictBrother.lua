@@ -87,7 +87,7 @@ end)
 -- Teleport to Bed
 local teleportBedButton = Instance.new("TextButton", frame)
 teleportBedButton.Size = UDim2.new(1, 0, 0, 30)
-tel noeportBedButton.Position = UDim2.new(0, 0, 0, 105)
+teleportBedButton.Position = UDim2.new(0, 0, 0, 105)
 teleportBedButton.Text = "Teleport to Bed"
 teleportBedButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 teleportBedButton.TextColor3 = Color3.fromRGB(255, 255, 255)

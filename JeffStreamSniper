@@ -57,7 +57,7 @@ end)
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
 title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-title.Text = "Teleport Gui - By Jeff"
+title.Text = "Jeff Stream Sniper"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextSize = 16
 title.Font = Enum.Font.SourceSansBold

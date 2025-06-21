@@ -1,0 +1,131 @@
+-- Remover GUI antiga (caso tenha)
+pcall(function() game.CoreGui.TeleportGui:Destroy() end)
+
+-- Criar ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "TeleportGui"
+gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
+
+-- Criar Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 220)
+frame.Position = UDim2.new(0.5, -150, 0.5, -110)
+frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+frame.BorderSizePixel = 0
+frame.Parent = gui
+
+-- Arrastar a frame
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	elseif input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		local delta = input.Position - dragStart
+		frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+-- Título
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+title.Text = "Teleport Gui - By Jeff"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 16
+title.Font = Enum.Font.SourceSansBold
+title.Parent = frame
+
+-- TextBox Nome
+local nomeBox = Instance.new("TextBox")
+nomeBox.PlaceholderText = "Nome do Jogador (Opcional)"
+nomeBox.Size = UDim2.new(1, -20, 0, 30)
+nomeBox.Position = UDim2.new(0, 10, 0, 40)
+nomeBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+nomeBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+nomeBox.TextSize = 14
+nomeBox.Font = Enum.Font.SourceSans
+nomeBox.Text = ""
+nomeBox.Parent = frame
+
+-- TextBox ID do jogo
+local idBox = Instance.new("TextBox")
+idBox.PlaceholderText = "ID do Jogo (PlaceId)"
+idBox.Size = UDim2.new(1, -20, 0, 30)
+idBox.Position = UDim2.new(0, 10, 0, 80)
+idBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+idBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+idBox.TextSize = 14
+idBox.Font = Enum.Font.SourceSans
+idBox.Text = ""
+idBox.Parent = frame
+
+-- TextBox Delay
+local delayBox = Instance.new("TextBox")
+delayBox.PlaceholderText = "Delay (Segundos) - Opcional"
+delayBox.Size = UDim2.new(1, -20, 0, 30)
+delayBox.Position = UDim2.new(0, 10, 0, 120)
+delayBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+delayBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+delayBox.TextSize = 14
+delayBox.Font = Enum.Font.SourceSans
+delayBox.Text = ""
+delayBox.Parent = frame
+
+-- Botão Entrar
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, -20, 0, 40)
+button.Position = UDim2.new(0, 10, 0, 170)
+button.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+button.Text = "Entrar no Jogo"
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.TextSize = 16
+button.Font = Enum.Font.SourceSansBold
+button.Parent = frame
+
+-- Função do botão
+button.MouseButton1Click:Connect(function()
+	local placeId = tonumber(idBox.Text)
+	local delayTime = tonumber(delayBox.Text) or 0
+
+	if not placeId then
+		warn("ID do jogo inválido!")
+		return
+	end
+
+	button.Text = "Aguardando..."
+	wait(delayTime)
+
+	button.Text = "Teleportando..."
+	game:GetService("TeleportService"):Teleport(placeId)
+
+	wait(2)
+	button.Text = "Entrar no Jogo"
+end)

@@ -1,19 +1,33 @@
- -- UI Library Dark Themed para Roblox
 local UILibrary = {}
 
--- Configurações do tema
-local Theme = {
-    BackgroundColor = Color3.fromRGB(15, 15, 15),
-    MainColor = Color3.fromRGB(30, 30, 30),
-    AccentColor = Color3.fromRGB(200, 40, 40),
-    TextColor = Color3.fromRGB(230, 230, 230),
-    DraggingColor = Color3.fromRGB(40, 40, 40),
-    BorderColor = Color3.fromRGB(60, 60, 60),
+-- Temas disponíveis
+local Themes = {
+    DarkTheme = {
+        BackgroundColor = Color3.fromRGB(15, 15, 15),
+        MainColor = Color3.fromRGB(30, 30, 30),
+        AccentColor = Color3.fromRGB(100, 100, 100),
+        TextColor = Color3.fromRGB(230, 230, 230),
+        BorderColor = Color3.fromRGB(50, 50, 50),
+    },
+    BloodTheme = {
+        BackgroundColor = Color3.fromRGB(25, 0, 0),
+        MainColor = Color3.fromRGB(60, 0, 0),
+        AccentColor = Color3.fromRGB(200, 20, 20),
+        TextColor = Color3.fromRGB(255, 100, 100),
+        BorderColor = Color3.fromRGB(100, 0, 0),
+    },
+    IceTheme = {
+        BackgroundColor = Color3.fromRGB(10, 20, 40),
+        MainColor = Color3.fromRGB(40, 70, 130),
+        AccentColor = Color3.fromRGB(150, 200, 255),
+        TextColor = Color3.fromRGB(200, 230, 255),
+        BorderColor = Color3.fromRGB(70, 110, 160),
+    }
 }
 
--- Função para tornar um Frame draggable
+-- Função para tornar um frame draggable via um dragger (top bar)
 local function makeDraggable(frame, dragger)
-    local dragging = false
+    local dragging
     local dragInput
     local dragStart
     local startPos
@@ -51,24 +65,25 @@ local function makeDraggable(frame, dragger)
     end)
 end
 
--- Função para criar janela principal
+-- Cria a janela principal
 function UILibrary:CreateWindow(title)
+    local Theme = Themes.DarkTheme -- Tema padrão
+
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "DarkUILibrary"
     screenGui.ResetOnSpawn = false
-    screenGui.Parent = game:GetService("CoreGui") -- coloca direto no CoreGui para bypass na maioria dos jogos
+    screenGui.Parent = game:GetService("CoreGui")
 
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "MainFrame"
-    mainFrame.Size = UDim2.new(0, 450, 0, 300)
-    mainFrame.Position = UDim2.new(0.5, -225, 0.5, -150)
+    mainFrame.Size = UDim2.new(0, 450, 0, 320)
+    mainFrame.Position = UDim2.new(0.5, -225, 0.5, -160)
     mainFrame.BackgroundColor3 = Theme.BackgroundColor
     mainFrame.BorderColor3 = Theme.BorderColor
     mainFrame.Parent = screenGui
     mainFrame.Active = true
-    mainFrame.Draggable = false -- Usamos o método próprio de drag
 
-    -- Top bar (dragger)
+    -- TopBar (para arrastar e título)
     local topBar = Instance.new("Frame")
     topBar.Name = "TopBar"
     topBar.Size = UDim2.new(1, 0, 0, 30)
@@ -89,7 +104,20 @@ function UILibrary:CreateWindow(title)
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.Parent = topBar
 
-    -- Conteúdo (onde a aba e elementos vão)
+    -- Botão trocar tema
+    local themeButton = Instance.new("TextButton")
+    themeButton.Name = "ThemeButton"
+    themeButton.Size = UDim2.new(0, 100, 1, 0)
+    themeButton.Position = UDim2.new(1, -105, 0, 0)
+    themeButton.BackgroundColor3 = Theme.AccentColor
+    themeButton.BorderSizePixel = 0
+    themeButton.Text = "DarkTheme"
+    themeButton.TextColor3 = Theme.TextColor
+    themeButton.Font = Enum.Font.GothamBold
+    themeButton.TextSize = 14
+    themeButton.Parent = topBar
+
+    -- Content Frame
     local contentFrame = Instance.new("Frame")
     contentFrame.Name = "ContentFrame"
     contentFrame.Size = UDim2.new(1, -20, 1, -50)
@@ -98,10 +126,48 @@ function UILibrary:CreateWindow(title)
     contentFrame.BorderSizePixel = 0
     contentFrame.Parent = mainFrame
 
+    -- Função para aplicar tema
+    local currentThemeName = "DarkTheme"
+    function mainFrame:SetTheme(themeName)
+        local t = Themes[themeName]
+        if not t then return end
+        currentThemeName = themeName
+        mainFrame.BackgroundColor3 = t.BackgroundColor
+        mainFrame.BorderColor3 = t.BorderColor
+        topBar.BackgroundColor3 = t.MainColor
+        titleLabel.TextColor3 = t.TextColor
+        themeButton.BackgroundColor3 = t.AccentColor
+        themeButton.TextColor3 = t.TextColor
+        contentFrame.BackgroundColor3 = t.MainColor
+        -- Atualiza textos e cores dos filhos do contentFrame (exemplo: botões)
+        for _, child in pairs(contentFrame:GetChildren()) do
+            if child:IsA("TextButton") then
+                child.BackgroundColor3 = t.AccentColor
+                child.TextColor3 = t.TextColor
+            elseif child:IsA("TextLabel") then
+                child.TextColor3 = t.TextColor
+            elseif child:IsA("Frame") then
+                child.BackgroundColor3 = t.MainColor
+            end
+        end
+        themeButton.Text = themeName
+    end
+
+    -- Clica no botão pra trocar tema
+    themeButton.MouseButton1Click:Connect(function()
+        if currentThemeName == "DarkTheme" then
+            mainFrame:SetTheme("BloodTheme")
+        elseif currentThemeName == "BloodTheme" then
+            mainFrame:SetTheme("IceTheme")
+        else
+            mainFrame:SetTheme("DarkTheme")
+        end
+    end)
+
     -- Faz draggable pelo topBar
     makeDraggable(mainFrame, topBar)
 
-    -- Exemplo: criar uma função para adicionar botões
+    -- Função para adicionar botão no contentFrame
     function mainFrame:AddButton(text, callback)
         local button = Instance.new("TextButton")
         button.Size = UDim2.new(1, 0, 0, 35)
@@ -118,9 +184,21 @@ function UILibrary:CreateWindow(title)
                 callback()
             end
         end)
+
+        -- Atualiza as cores do botão quando tema mudar
+        local function updateButtonColors()
+            local t = Themes[currentThemeName]
+            button.BackgroundColor3 = t.AccentColor
+            button.TextColor3 = t.TextColor
+        end
+
+        -- Gatilho pra atualizar cores quando mudar tema
+        themeButton.MouseButton1Click:Connect(updateButtonColors)
+
+        return button
     end
 
-    -- Exemplo: função para adicionar toggle
+    -- Função para adicionar toggle no contentFrame
     function mainFrame:AddToggle(text, callback)
         local toggleFrame = Instance.new("Frame")
         toggleFrame.Size = UDim2.new(1, 0, 0, 35)
@@ -157,7 +235,22 @@ function UILibrary:CreateWindow(title)
                 callback(toggled)
             end
         end)
+
+        -- Atualiza cores quando tema mudar
+        local function updateToggleColors()
+            local t = Themes[currentThemeName]
+            label.TextColor3 = t.TextColor
+            toggleButton.BackgroundColor3 = t.AccentColor
+            toggleButton.TextColor3 = t.TextColor
+        end
+
+        themeButton.MouseButton1Click:Connect(updateToggleColors)
+
+        return toggleFrame
     end
+
+    -- Aplica tema padrão
+    mainFrame:SetTheme(currentThemeName)
 
     return mainFrame
 end

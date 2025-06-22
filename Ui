@@ -32,7 +32,7 @@ function JeffUILib:CreateWindow(config)
     Title.TextSize = 20
     Title.Parent = TopBar
 
-    -- Side Tab
+    -- Sidebar das Abas
     local TabHolder = Instance.new("Frame")
     TabHolder.Size = UDim2.new(0, 120, 1, -35)
     TabHolder.Position = UDim2.new(0, 0, 0, 35)
@@ -45,13 +45,14 @@ function JeffUILib:CreateWindow(config)
     TabList.SortOrder = Enum.SortOrder.LayoutOrder
     TabList.Padding = UDim.new(0, 5)
 
-    -- Container de abas
+    -- Container das Páginas
     local PagesFolder = Instance.new("Folder")
     PagesFolder.Parent = Main
 
     local WindowFunctions = {}
 
     function WindowFunctions:CreateTab(name)
+        -- Botão da Aba
         local TabButton = Instance.new("TextButton")
         TabButton.Size = UDim2.new(1, -10, 0, 30)
         TabButton.Position = UDim2.new(0, 5, 0, 0)
@@ -63,19 +64,28 @@ function JeffUILib:CreateWindow(config)
         TabButton.BorderSizePixel = 0
         TabButton.Parent = TabHolder
 
-        local Page = Instance.new("Frame")
+        -- Página da Aba
+        local Page = Instance.new("ScrollingFrame")
         Page.Size = UDim2.new(1, -130, 1, -45)
         Page.Position = UDim2.new(0, 125, 0, 40)
         Page.BackgroundColor3 = Color3.fromRGB(35, 0, 0)
         Page.BorderSizePixel = 0
-        Page.Parent = PagesFolder
         Page.Visible = false
+        Page.Parent = PagesFolder
+        Page.CanvasSize = UDim2.new(0, 0, 0, 0)
+        Page.ScrollBarThickness = 4
+        Page.ScrollBarImageColor3 = Color3.fromRGB(180, 0, 0)
 
         local PageList = Instance.new("UIListLayout")
         PageList.Parent = Page
         PageList.Padding = UDim.new(0, 5)
         PageList.SortOrder = Enum.SortOrder.LayoutOrder
 
+        PageList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            Page.CanvasSize = UDim2.new(0, 0, 0, PageList.AbsoluteContentSize.Y + 10)
+        end)
+
+        -- Abrir a aba
         TabButton.MouseButton1Click:Connect(function()
             for _, v in pairs(PagesFolder:GetChildren()) do
                 v.Visible = false
@@ -83,8 +93,10 @@ function JeffUILib:CreateWindow(config)
             Page.Visible = true
         end)
 
+        -- Retorna funções da Aba
         local TabFunctions = {}
 
+        -- Botão
         function TabFunctions:CreateButton(text, callback)
             local Button = Instance.new("TextButton")
             Button.Size = UDim2.new(1, -10, 0, 30)
@@ -98,6 +110,27 @@ function JeffUILib:CreateWindow(config)
 
             Button.MouseButton1Click:Connect(function()
                 pcall(callback)
+            end)
+        end
+
+        -- Toggle
+        function TabFunctions:CreateToggle(text, default, callback)
+            local Toggle = Instance.new("TextButton")
+            Toggle.Size = UDim2.new(1, -10, 0, 30)
+            Toggle.BackgroundColor3 = Color3.fromRGB(50, 0, 0)
+            Toggle.TextColor3 = Color3.new(1, 1, 1)
+            Toggle.Text = text .. " : " .. (default and "ON" or "OFF")
+            Toggle.Font = Enum.Font.GothamBold
+            Toggle.TextSize = 14
+            Toggle.BorderSizePixel = 0
+            Toggle.Parent = Page
+
+            local toggled = default
+
+            Toggle.MouseButton1Click:Connect(function()
+                toggled = not toggled
+                Toggle.Text = text .. " : " .. (toggled and "ON" or "OFF")
+                pcall(callback, toggled)
             end)
         end
 

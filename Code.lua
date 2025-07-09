@@ -1,6 +1,6 @@
 local Library = {}
 
-function Library:CreateWindow(title)
+function Library:Window(title)
     local window = {}
     window.Title = title or "Window"
     window.Tabs = {}

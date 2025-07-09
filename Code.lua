@@ -1,10 +1,15 @@
+-- Salve esse script como Code.lua no seu GitHub (repositório público)
+
 return function()
     local library = {}
 
     function library:CreateWindow(title)
         local window = {}
 
-        local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+        local ScreenGui = Instance.new("ScreenGui")
+        ScreenGui.Name = "ExploitUI_"..tostring(math.random(1000,9999))
+        ScreenGui.Parent = game:GetService("CoreGui")
+
         local Main = Instance.new("Frame", ScreenGui)
         Main.Size = UDim2.new(0, 500, 0, 300)
         Main.Position = UDim2.new(0.5, -250, 0.5, -150)
@@ -12,7 +17,6 @@ return function()
         Main.Active = true
         Main.Draggable = true
         Main.BorderSizePixel = 0
-        Main.Name = "JeffWindow_"..tostring(math.random(1000,9999))
 
         local TopBar = Instance.new("TextLabel", Main)
         TopBar.Size = UDim2.new(1, 0, 0, 30)
@@ -28,9 +32,9 @@ return function()
         TabsHolder.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         TabsHolder.BorderSizePixel = 0
 
-        local UIList = Instance.new("UIListLayout", TabsHolder)
-        UIList.SortOrder = Enum.SortOrder.LayoutOrder
-        UIList.Padding = UDim.new(0, 4)
+        local UIListTabs = Instance.new("UIListLayout", TabsHolder)
+        UIListTabs.SortOrder = Enum.SortOrder.LayoutOrder
+        UIListTabs.Padding = UDim.new(0, 4)
 
         local PagesHolder = Instance.new("Frame", Main)
         PagesHolder.Position = UDim2.new(0, 120, 0, 30)
@@ -38,16 +42,24 @@ return function()
         PagesHolder.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
         PagesHolder.BorderSizePixel = 0
 
-        function window:CreateTab(tabName)
+        local function clearPages()
+            for _, child in pairs(PagesHolder:GetChildren()) do
+                if child:IsA("ScrollingFrame") then
+                    child.Visible = false
+                end
+            end
+        end
+
+        function window:CreateTab(name)
             local tab = {}
 
             local TabButton = Instance.new("TextButton", TabsHolder)
             TabButton.Size = UDim2.new(1, 0, 0, 30)
-            TabButton.Text = tabName
-            TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
             TabButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+            TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
             TabButton.Font = Enum.Font.SourceSans
             TabButton.TextSize = 14
+            TabButton.Text = name
 
             local Page = Instance.new("ScrollingFrame", PagesHolder)
             Page.Size = UDim2.new(1, 0, 1, 0)
@@ -56,52 +68,52 @@ return function()
             Page.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
             Page.Visible = false
 
-            local PageLayout = Instance.new("UIListLayout", Page)
-            PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            PageLayout.Padding = UDim.new(0, 6)
+            local UIListPage = Instance.new("UIListLayout", Page)
+            UIListPage.SortOrder = Enum.SortOrder.LayoutOrder
+            UIListPage.Padding = UDim.new(0, 6)
 
-            local function updateCanvas()
-                Page.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 10)
-            end
-            PageLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateCanvas)
+            UIListPage:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                Page.CanvasSize = UDim2.new(0, 0, 0, UIListPage.AbsoluteContentSize.Y + 10)
+            end)
 
-            -- Trocar aba
             TabButton.MouseButton1Click:Connect(function()
-                for _, child in ipairs(PagesHolder:GetChildren()) do
-                    if child:IsA("ScrollingFrame") then
-                        child.Visible = false
-                    end
-                end
+                clearPages()
                 Page.Visible = true
             end)
 
+            -- Exibe a primeira aba automaticamente ao criar
+            if #PagesHolder:GetChildren() == 0 then
+                Page.Visible = true
+            end
+
             function tab:CreateButton(text, callback)
-                local btn = Instance.new("TextButton", Page)
-                btn.Size = UDim2.new(1, -10, 0, 30)
-                btn.Position = UDim2.new(0, 5, 0, 0)
-                btn.Text = text
-                btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-                btn.Font = Enum.Font.SourceSans
-                btn.TextSize = 14
-                btn.MouseButton1Click:Connect(callback)
+                local Button = Instance.new("TextButton", Page)
+                Button.Size = UDim2.new(1, -10, 0, 30)
+                Button.Position = UDim2.new(0, 5, 0, 0)
+                Button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                Button.Text = text
+                Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Button.Font = Enum.Font.SourceSans
+                Button.TextSize = 14
+                Button.AutoButtonColor = true
+                Button.MouseButton1Click:Connect(callback)
             end
 
             function tab:CreateToggle(text, callback)
-                local toggle = Instance.new("TextButton", Page)
-                toggle.Size = UDim2.new(1, -10, 0, 30)
-                toggle.Position = UDim2.new(0, 5, 0, 0)
-                toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-                toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-                toggle.Font = Enum.Font.SourceSans
-                toggle.TextSize = 14
+                local Toggle = Instance.new("TextButton", Page)
+                Toggle.Size = UDim2.new(1, -10, 0, 30)
+                Toggle.Position = UDim2.new(0, 5, 0, 0)
+                Toggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Toggle.Font = Enum.Font.SourceSans
+                Toggle.TextSize = 14
 
                 local state = false
-                toggle.Text = "[ OFF ] " .. text
+                Toggle.Text = "[ OFF ] " .. text
 
-                toggle.MouseButton1Click:Connect(function()
+                Toggle.MouseButton1Click:Connect(function()
                     state = not state
-                    toggle.Text = (state and "[ ON ] " or "[ OFF ] ") .. text
+                    Toggle.Text = (state and "[ ON ] " or "[ OFF ] ") .. text
                     callback(state)
                 end)
             end

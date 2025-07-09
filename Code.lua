@@ -1,207 +1,98 @@
--- this code is awful so dont mind it plz
-local players = game:GetService("Players");
-local run_service = game:GetService("RunService");
-local user_input_service = game:GetService("UserInputService");
-local tween_service = game:GetService("TweenService");
-local core_gui = game:GetService("CoreGui");
+-- GUI Exploit estilo Dark - com botão, toggle, label e draggable
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
-local loader = Instance.new("ScreenGui", core_gui);
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ExploitDarkUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
 
-local games = {
-	{ name = "Phantom Forces", link = "https://raw.githubusercontent.com/dementiaenjoyer/homohack/refs/heads/main/pf_lite_rewrite_demo"},
-	{ name = "Bad Business", link = "https://raw.githubusercontent.com/dementiaenjoyer/homohack/main/bad_business.lua" },
-	{ name = "Fisch", link = "https://raw.githubusercontent.com/dementiaenjoyer/homohack/refs/heads/main/fisch.lua"},
-    { name = "Frontlines" },
-	{ name = "Scorched Earth"},
-};
+-- Frame principal
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 220, 0, 180)
+Frame.Position = UDim2.new(0.5, -110, 0.5, -90)
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Frame.BorderSizePixel = 0
+Frame.Active = true
+Frame.Draggable = true
+Frame.Parent = ScreenGui
 
-local custom_callbacks = {
-	["Scorched Earth"] = function()
-		local teleport_service = game:GetService("TeleportService");
+-- Título
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Position = UDim2.new(0, 0, 0, 0)
+Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Title.Text = "STEAL A BRAINROT"
+Title.Font = Enum.Font.GothamBlack
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16
+Title.BorderSizePixel = 0
+Title.Parent = Frame
 
-		if (game.GameId == 4785126950) then
-			players.LocalPlayer:Kick("Run the scorched earth script inside of another game, like 'a literal baseplate'. Homohack will teleport you");
-			return;
-		end
+-- Aba "MAIN"
+local Tab = Instance.new("TextLabel")
+Tab.Size = UDim2.new(1, 0, 0, 25)
+Tab.Position = UDim2.new(0, 0, 0, 30)
+Tab.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Tab.Text = "MAIN"
+Tab.Font = Enum.Font.GothamBold
+Tab.TextColor3 = Color3.fromRGB(255, 255, 255)
+Tab.TextSize = 14
+Tab.BorderSizePixel = 0
+Tab.Parent = Frame
 
-        setfflag("DebugRunParallelLuaOnMainThread", "True");
+-- Label de Status
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size = UDim2.new(1, -20, 0, 25)
+StatusLabel.Position = UDim2.new(0, 10, 0, 60)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "Status: Aguardando..."
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+StatusLabel.TextSize = 13
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+StatusLabel.Parent = Frame
 
-		teleport_service:Teleport(13794093709, players.LocalPlayer);
-		queue_on_teleport([[
-    		repeat task.wait() until game:IsLoaded();
-    		loadstring(game:HttpGet("https://raw.githubusercontent.com/dementiaenjoyer/homohack/refs/heads/main/scorched_earth.lua"))();
-		]]);
-	end,
+-- Botão
+local Button = Instance.new("TextButton")
+Button.Size = UDim2.new(0, 180, 0, 30)
+Button.Position = UDim2.new(0, 20, 0, 95)
+Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Button.Text = "Executar Script"
+Button.Font = Enum.Font.GothamBold
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextSize = 14
+Button.BorderSizePixel = 0
+Button.Parent = Frame
 
-    ["Frontlines"] = function()
-        local success = false;
+Button.MouseButton1Click:Connect(function()
+	StatusLabel.Text = "Status: Script executado!"
+end)
 
-        if (run_on_actor) then
-            success = true;
+-- Toggle "Float"
+local ToggleText = Instance.new("TextLabel")
+ToggleText.Size = UDim2.new(0, 140, 0, 25)
+ToggleText.Position = UDim2.new(0, 10, 0, 135)
+ToggleText.BackgroundTransparency = 1
+ToggleText.Text = "Float"
+ToggleText.Font = Enum.Font.GothamBold
+ToggleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleText.TextSize = 14
+ToggleText.TextXAlignment = Enum.TextXAlignment.Left
+ToggleText.Parent = Frame
 
-            run_on_actor(getactors()[1], [=[
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/dementiaenjoyer/homohack/refs/heads/main/frontlines.lua"))();
-            ]=]);
-        elseif (run_on_thread and getactorthreads) then
-            success = true;
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 20, 0, 20)
+ToggleButton.Position = UDim2.new(0, 180, 0, 138)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Text = ""
+ToggleButton.Parent = Frame
 
-            run_on_thread(getactorthreads()[1], [=[
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/dementiaenjoyer/homohack/refs/heads/main/frontlines.lua"))();
-            ]=]);
-        end
+local toggled = false
 
-        if (not success) then
-            players.LocalPlayer:Kick("Your executor does not support 'run_on_actor' or 'run_on_thread'");
-        end
-    end
-};
-
-local holder_stroke = Instance.new("UIStroke");
-holder_stroke.Color = Color3.fromRGB(24, 24, 24);
-holder_stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
-
--- ui
-do
-	local dragging = false;
-	local mouse_start = nil;
-	local frame_start = nil;
-	
-	local main = Instance.new("Frame", loader); do
-		main.BackgroundColor3 = Color3.fromRGB(12, 12, 12);
-		main.BorderColor3 = Color3.fromRGB(0, 0, 0);
-		main.BorderSizePixel = 0;
-		main.Position = UDim2.new(0.427201211, 0, 0.393133998, 0);
-		main.Size = UDim2.new(0.145, 0, 0.267, 0, 0);
-	end
-	
-	local title = Instance.new("TextLabel", main); do
-		title.BackgroundColor3 = Color3.fromRGB(13, 13, 13);
-		title.BorderColor3 = Color3.fromRGB(0, 0, 0);
-		title.BorderSizePixel = 0;
-		title.Position = UDim2.new(0.0361463465, 0, 0.0199999996, 0);
-		title.Size = UDim2.new(0.926784515, 0, 0.112490386, 0);
-		title.Font = Enum.Font.RobotoMono;
-		title.Text = "homohack";
-		title.TextColor3 = Color3.fromRGB(255, 255, 255);
-		title.TextStrokeTransparency = 0.000;
-		title.TextWrapped = true;
-		title.TextSize = 18;
-		
-		title.InputBegan:Connect(function(input)
-			if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
-				dragging = true;
-				mouse_start = user_input_service:GetMouseLocation();
-				frame_start = main.Position;
-			end
-		end)
-
-		user_input_service.InputChanged:Connect(function(input)
-			if (dragging and input.UserInputType == Enum.UserInputType.MouseMovement) then
-				local delta = user_input_service:GetMouseLocation() - mouse_start;
-				tween_service:Create(main, TweenInfo.new(0.1), {Position = UDim2.new(frame_start.X.Scale, frame_start.X.Offset + delta.X, frame_start.Y.Scale, frame_start.Y.Offset + delta.Y)}):Play();
-			end
-		end)
-		
-		user_input_service.InputEnded:Connect(function(input)
-			if (dragging) then
-				dragging = false;
-			end
-		end)
-	end
-	
-	local ui_stroke = Instance.new("UIStroke", main); do
-		ui_stroke.Thickness = 2;
-		ui_stroke.Color = Color3.fromRGB(255, 255, 255);
-	end
-	
-	local ui_gradient = Instance.new("UIGradient", ui_stroke); do
-		ui_gradient.Color = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 70, 73)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
-		});
-	end
-
-	local ui_corner = Instance.new("UICorner", title); do
-		ui_corner.CornerRadius = UDim.new(0, 2);
-	end
-
-	local holder = Instance.new("Frame", main); do
-		holder.BackgroundColor3 = Color3.fromRGB(13, 13, 13);
-		holder.BorderColor3 = Color3.fromRGB(0, 0, 0);
-		holder.BorderSizePixel = 0;
-		holder.Position = UDim2.new(0.0361457169, 0, 0.167407826, 0);
-		holder.Size = UDim2.new(0.926784515, 0, 0.781875908, 0);
-	end
-	
-	local stroke = holder_stroke:Clone(); do
-		stroke.Parent = holder;
-	end
-
-	local ui_corner_2 = Instance.new("UICorner", holder); do
-		ui_corner_2.CornerRadius = UDim.new(0, 4);
-	end
-
-	local scrolling_frame = Instance.new("ScrollingFrame", holder); do
-		scrolling_frame.Active = true;
-		scrolling_frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-		scrolling_frame.BackgroundTransparency = 1.000;
-		scrolling_frame.BorderColor3 = Color3.fromRGB(0, 0, 0);
-		scrolling_frame.BorderSizePixel = 0;
-		scrolling_frame.Position = UDim2.new(0, 0, 3.04931473e-06, 0);
-		scrolling_frame.Size = UDim2.new(1, 0, 0.999999821, 0);
-		scrolling_frame.CanvasSize = UDim2.new(0, 0, 5, 0);
-	end
-
-	local ui_padding = Instance.new("UIPadding", scrolling_frame); do
-		ui_padding.PaddingTop = UDim.new(0, 10);
-	end
-
-	local ui_grid_layout = Instance.new("UIGridLayout", scrolling_frame); do
-		ui_grid_layout.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-		ui_grid_layout.SortOrder = Enum.SortOrder.LayoutOrder;
-		ui_grid_layout.CellPadding = UDim2.new(0, 10, 0, 10);
-		ui_grid_layout.CellSize = UDim2.new(0, 165, 0, 25);
-	end
-	
-	local heartbeat = nil;
-
-	for _, supported_game in games do
-		local name = supported_game.name;
-		local text_button = Instance.new("TextButton", scrolling_frame); do
-			text_button.MouseButton1Click:Connect(function()
-				local custom_callback = custom_callbacks[name];
-				
-				if (not custom_callback) then
-					loadstring(game:HttpGet(supported_game.link))();
-                else
-                    custom_callback();
-				end
-
-                heartbeat:Disconnect();
-                loader:Destroy();
-			end);
-			
-			text_button.Text = `load {supported_game.name}`;
-			text_button.BackgroundColor3 = Color3.fromRGB(14, 14, 14);
-			text_button.BorderColor3 = Color3.fromRGB(0, 0, 0);
-			text_button.BorderSizePixel = 0;
-			text_button.Size = UDim2.new(0.14958863, 0, 0.0553709865, 0);
-			text_button.Font = Enum.Font.RobotoMono;
-			text_button.TextColor3 = Color3.fromRGB(255, 255, 255);
-			text_button.TextSize = 12.000;
-			text_button.TextWrapped = true;
-		end
-
-		local stroke = holder_stroke:Clone(); do
-			stroke.Parent = text_button;
-		end
-
-		local ui_corner_3 = Instance.new("UICorner", text_button); do
-			ui_corner_3.CornerRadius = UDim.new(0, 4);
-		end
-	end
-	
-	heartbeat = run_service.Heartbeat:Connect(function()
-		ui_gradient.Rotation += 4;
-	end)
-end
+ToggleButton.MouseButton1Click:Connect(function()
+	toggled = not toggled
+	ToggleButton.BackgroundColor3 = toggled and Color3.fromRGB(0, 170, 0) or Color3.fromRGB(40, 40, 40)
+	StatusLabel.Text = "Status: Float " .. (toggled and "ON" or "OFF")
+end)

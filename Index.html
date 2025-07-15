@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeff key</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Jeff key</h1>
+  <div class="subtitle">Completed 0 of 2</div>
+
+  <div class="countdown" id="countdown">5</div>
+
+  <button id="continueBtn" class="continue-btn" disabled>Continue</button>
+  <button class="tutorial-btn" onclick="window.open('https://youtube.com')">🎥 Watch tutorial</button>
+  <button class="shop-btn" onclick="window.open('https://yourshop.com')">🛒 Visit shop</button>
+
+  <a href="#">Report</a> ·
+  <a href="#">Terms of Service</a> ·
+  <a href="#">Privacy Policy</a>
+</div>
+
+<script>
+  let countdown = 5;
+  const countdownEl = document.getElementById('countdown');
+  const continueBtn = document.getElementById('continueBtn');
+
+  const timer = setInterval(() => {
+    countdown--;
+    countdownEl.textContent = countdown;
+
+    if (countdown === 0) {
+      clearInterval(timer);
+      countdownEl.classList.add('white');
+      continueBtn.disabled = false;
+    }
+  }, 1000);
+
+  continueBtn.addEventListener('click', () => {
+    window.location.href = 'https://lootdest.org/s?EsFBvPvY'; // Altere aqui para o seu link LootLabs
+  });
+</script>
+
+</body>
+</html>

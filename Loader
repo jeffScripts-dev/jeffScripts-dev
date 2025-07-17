@@ -4,9 +4,11 @@ local function isValidKeyFormat(k)
     return string.match(k, "^FREE_%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w$") ~= nil
 end
 
-if key == "FREE_IUa0nnxtf0Njk3JfLkCIGGJ6" and isValidKeyFormat(key) then
-    print("✅ Key correta! Carregando script...")
+local validKey = "FREE_IUa0nnxtf0Njk3JfLkCIGGJ6"
+
+if key == validKey and isValidKeyFormat(key) then
+    print("✅ Key correta! Executando script...")
     loadstring(game:HttpGet("https://seusite.com/seuscript.lua"))()
 else
-    print("❌ Key inválida ou formato incorreto.")
+    warn("❌ Key inválida ou formato incorreto.")
 end

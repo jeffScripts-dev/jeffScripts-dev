@@ -1,11 +1,12 @@
-local key = "Key_do_usuario" -- 🔑 O USUÁRIO COLA A KEY AQUI
+local key = tostring(getgenv().key)
 
-local function isValidKeyFormat(key)
-    return string.match(key, "^FREE_%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w$") ~= nil
+local function isValidKeyFormat(k)
+    return string.match(k, "^FREE_%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w$") ~= nil
 end
 
-if isValidKeyFormat(key) then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/jeffScripts-dev/jeffScripts-dev/refs/heads/main/RobloxFakeChatSystem"))()
+if key == "FREE_IUa0nnxtf0Njk3JfLkCIGGJ6" and isValidKeyFormat(key) then
+    print("✅ Key correta! Carregando script...")
+    loadstring(game:HttpGet("https://seusite.com/seuscript.lua"))()
 else
-    print("❌ Formato de key inválido. Use uma key no formato: FREE_XXXXXXXXXXXXXX...")
+    print("❌ Key inválida ou formato incorreto.")
 end

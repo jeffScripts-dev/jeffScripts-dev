@@ -8,7 +8,7 @@ local validKey = "FREE_IUa0nnxtf0Njk3JfLkCIGGJ6"
 
 if key == validKey and isValidKeyFormat(key) then
     print("✅ Key correta! Executando script...")
-    loadstring(game:HttpGet("https://seusite.com/seuscript.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/jeffScripts-dev/jeffScripts-dev/refs/heads/main/RobloxFakeChatSystem"))()
 else
     warn("❌ Key inválida ou formato incorreto.")
 end

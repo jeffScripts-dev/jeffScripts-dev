@@ -1,10 +1,10 @@
 local key = tostring(getgenv().key)
 
 local function isValidKeyFormat(k)
-    return string.match(k, "^FREE_%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w%w$") ~= nil
+    return string.match(k, "^JeffTheBestFrHub") ~= nil
 end
 
-local validKey = "FREE_IUa0nnxtf0Njk3JfLkCIGGJ6"
+local validKey = "JeffTheBestFrHub"
 
 if key == validKey and isValidKeyFormat(key) then
     print("✅ Key correta! Executando script...")

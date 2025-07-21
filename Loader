@@ -1,14 +1,132 @@
-local key = tostring(getgenv().key)
+--[[ 
+ 📌 Jeff UI Library - Dark Theme
+ 📦 Por: JeffScripts 
+ 💡 Uso: local Ui = loadstring(...)(); Ui:Init()
+--]]
 
-local function isValidKeyFormat(k)
-    return string.match(k, "^JeffTheBestFrHub") ~= nil
+local Library = {}
+
+function Library:Init()
+    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    ScreenGui.Name = "JeffUILib"
+
+    local MainFrame = Instance.new("Frame", ScreenGui)
+    MainFrame.Size = UDim2.new(0, 550, 0, 350)
+    MainFrame.Position = UDim2.new(0.5, -275, 0.5, -175)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+
+    local Title = Instance.new("TextLabel", MainFrame)
+    Title.Size = UDim2.new(1, 0, 0, 40)
+    Title.BackgroundTransparency = 1
+    Title.Text = "Jeff Dark UI"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 24
+
+    local TabButtonsFrame = Instance.new("Frame", MainFrame)
+    TabButtonsFrame.Position = UDim2.new(0, 0, 0, 40)
+    TabButtonsFrame.Size = UDim2.new(0, 120, 1, -40)
+    TabButtonsFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    TabButtonsFrame.BorderSizePixel = 0
+
+    local ContentFrame = Instance.new("Frame", MainFrame)
+    ContentFrame.Position = UDim2.new(0, 120, 0, 40)
+    ContentFrame.Size = UDim2.new(1, -120, 1, -40)
+    ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    ContentFrame.BorderSizePixel = 0
+
+    local UIListLayout = Instance.new("UIListLayout", TabButtonsFrame)
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    local Tabs = {}
+
+    Library.CreateTab = function(self, tabName)
+        local Button = Instance.new("TextButton", TabButtonsFrame)
+        Button.Size = UDim2.new(1, 0, 0, 35)
+        Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        Button.Text = tabName
+        Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Button.Font = Enum.Font.Gotham
+        Button.TextSize = 14
+
+        local TabFrame = Instance.new("ScrollingFrame", ContentFrame)
+        TabFrame.Size = UDim2.new(1, 0, 1, 0)
+        TabFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+        TabFrame.BackgroundTransparency = 1
+        TabFrame.Visible = false
+        TabFrame.ScrollBarThickness = 4
+
+        local TabLayout = Instance.new("UIListLayout", TabFrame)
+        TabLayout.Padding = UDim.new(0, 6)
+        TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+        Button.MouseButton1Click:Connect(function()
+            for _, v in pairs(ContentFrame:GetChildren()) do
+                if v:IsA("ScrollingFrame") then
+                    v.Visible = false
+                end
+            end
+            TabFrame.Visible = true
+        end)
+
+        Tabs[tabName] = TabFrame
+
+        local TabObject = {}
+
+        function TabObject:CreateSection(name)
+            local Label = Instance.new("TextLabel", TabFrame)
+            Label.Size = UDim2.new(1, -10, 0, 25)
+            Label.BackgroundTransparency = 1
+            Label.Text = "🔹 " .. name
+            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Label.Font = Enum.Font.GothamSemibold
+            Label.TextSize = 16
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.Position = UDim2.new(0, 5, 0, 0)
+
+            local SectionObject = {}
+
+            function SectionObject:AddButton(btnName, callback)
+                local Btn = Instance.new("TextButton", TabFrame)
+                Btn.Size = UDim2.new(1, -10, 0, 30)
+                Btn.Text = btnName
+                Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                Btn.BorderSizePixel = 0
+                Btn.Font = Enum.Font.Gotham
+                Btn.TextSize = 14
+                Btn.Position = UDim2.new(0, 5, 0, 0)
+
+                Btn.MouseButton1Click:Connect(callback)
+            end
+
+            function SectionObject:AddToggle(toggleName, callback)
+                local ToggleBtn = Instance.new("TextButton", TabFrame)
+                ToggleBtn.Size = UDim2.new(1, -10, 0, 30)
+                ToggleBtn.Text = "☐ " .. toggleName
+                ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                ToggleBtn.BorderSizePixel = 0
+                ToggleBtn.Font = Enum.Font.Gotham
+                ToggleBtn.TextSize = 14
+                ToggleBtn.Position = UDim2.new(0, 5, 0, 0)
+
+                local state = false
+                ToggleBtn.MouseButton1Click:Connect(function()
+                    state = not state
+                    ToggleBtn.Text = (state and "✅ " or "☐ ") .. toggleName
+                    pcall(callback, state)
+                end)
+            end
+
+            return SectionObject
+        end
+
+        return TabObject
+    end
 end
 
-local validKey = "JeffTheBestFrHub"
-
-if key == validKey and isValidKeyFormat(key) then
-    print("✅ Key correta! Executando script...")
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/jeffScripts-dev/jeffScripts-dev/refs/heads/main/RobloxFakeChatSystem"))()
-else
-    warn("❌ Key inválida ou formato incorreto.")
-end
+return Library
